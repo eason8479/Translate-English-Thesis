@@ -152,6 +152,8 @@ the beginning of a sentence: ``Equation \eqref{eq} is . . .''
 
 \subsection{\LaTeX-Specific Advice}
 
+Experimental Data Processing and Feature ExtractionDuring the experimental phase of this study, the collected distance data was first preprocessed to remove outliers. Subsequently, the Least Squares Method was employed to generate an optimal fitting curve. This curve accurately characterizes the distance variation between the user's legs and the LiDAR, enabling the system to precisely distinguish the dynamic features of normal walking versus gait transitions (increasing or decreasing steps). These features serve as inputs for the fuzzy control system, facilitating the precise modulation of the hub motors.Validation of the Hierarchical Fuzzy System (HFS)Finally, the efficacy of the Hierarchical Fuzzy System (HFS) was validated across various road scenarios. Experimental results demonstrate that in straight-line tests, the system stabilizes the wheel speed difference within a minimal interval of $\pm 2$, ensuring high directional stability without manual intervention. The turning tests verified the system's sensitivity to the operator's intent; upon detecting an increased differential in wheel speeds, the controller guides the vehicle through the turn and rapidly restores straight-line control once the maneuver is complete.Performance on InclinesRegarding slope scenarios, the system exhibits excellent dynamic adaptability. In uphill conditions, the system dynamically compensates the PWM output power based on the average center-point distance between the user and the vehicle to provide sufficient thrust. In downhill conditions, an automatic power-cut braking mechanism is utilized to simulate the effects of an Anti-lock Braking System (ABS), providing continuous and stable motor braking to ensure safety during descent.
+
 Please use ``soft'' (e.g., \verb|\eqref{Eq}|) cross references instead
 of ``hard'' references (e.g., \verb|(1)|). That will make it possible
 to combine sections, add equations, or change the order of figures or
@@ -279,26 +281,40 @@ an ``e'' after the ``g''. Avoid the stilted expression ``one of us (R. B.
 G.) thanks $\ldots$''. Instead, try ``R. B. G. thanks$\ldots$''. Put sponsor 
 acknowledgments in the unnumbered footnote on the first page.
 
-\section*{References}
+\section*{Conclusion}
 
-Please number citations consecutively within brackets \cite{b1}. The 
-sentence punctuation follows the bracket \cite{b2}. Refer simply to the reference 
-number, as in \cite{b3}---do not use ``Ref. \cite{b3}'' or ``reference \cite{b3}'' except at 
-the beginning of a sentence: ``Reference \cite{b3} was the first $\ldots$''
+\renewcommand{\thefigure}{5.1} 
+\setcounter{figure}{0}
 
-Number footnotes separately in superscripts. Place the actual footnote at 
-the bottom of the column in which it was cited. Do not put footnotes in the 
-abstract or reference list. Use letters for table footnotes.
+In the experimental phase of this study, raw distance data were first pre-processed to 
+mitigate the impact of outliers. Subsequently, the least squares method was applied to derive 
+an optimal fitting curve. This curve accurately characterizes the spatial variation between 
+the user's lower limbs and the Light Detection and Ranging (LiDAR) sensor, enabling the 
+system to distinguish dynamic features between steady-state walking and gait transitions 
+(e.g., acceleration or deceleration). These features serve as the primary inputs for the 
+fuzzy control system, thereby facilitating precise regulation of the in-wheel motors.
 
-Unless there are six authors or more give all authors' names; do not use 
-``et al.''. Papers that have not been published, even if they have been 
-submitted for publication, should be cited as ``unpublished'' \cite{b4}. Papers 
-that have been accepted for publication should be cited as ``in press'' \cite{b5}. 
-Capitalize only the first word in a paper title, except for proper nouns and 
-element symbols.
+The performance of the proposed Hierarchical Fuzzy System (HFS) was validated across diverse 
+terrain scenarios. Experimental results indicate that in straight-line tests, the system 
+effectively constrains the wheel speed differential within a narrow interval of $\pm 2$ (as 
+illustrated in Fig.~\ref{fig:5.1}), ensuring autonomous directional stability 
+without human intervention. In cornering maneuvers, the controller exhibits high sensitivity 
+to user intent; upon detecting a significant speed differential, it guides the vehicle 
+through the turn and achieves rapid convergence back to straight-line tracking post-maneuver. 
 
-For papers published in translation journals, please give the English 
-citation first, followed by the original foreign-language citation \cite{b6}.
+Furthermore, the system demonstrates robust adaptability in ramp scenarios. For uphill 
+transitions, the system dynamically compensates the Pulse Width Modulation (PWM) output based 
+on the relative distance between the user and the vehicle's center of mass to provide 
+sufficient propulsion. Conversely, during downhill descents, an automatic power-off braking 
+mechanism is implemented to simulate the functionality of an Anti-lock Braking System (ABS), 
+providing sustained braking torque and ensuring operational safety.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\linewidth]{fig5_1.png}
+    \caption{Hall signal difference during straight-line walking and turning maneuvers. The green boundary illustrates the system's ability to maintain the speed differential within a stable range of $\pm 2$ during the correction process.}
+    \label{fig:5.1}
+\end{figure}
 
 \begin{thebibliography}{00}
 \bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
