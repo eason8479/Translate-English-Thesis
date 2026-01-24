@@ -9,14 +9,14 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Conference Paper Title*\\
-{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured for https://ieeexplore.ieee.org  and
-should not be used}
+\title{An Intelligent Rollator by Integrating Fuzzy Control and Multi-Sensor System\\
 \thanks{Identify applicable funding agency here. If none, delete this.}
+
 }
 
 \author{
@@ -87,9 +87,15 @@ should not be used}
 \maketitle
 
 \begin{abstract}
-This document is a model and instructions for \LaTeX.
-This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
-or Math in Paper Title or Abstract.
+This research presents an innovative mobility aid solution, termed the ``Intelligent Rollator'', designed for elderly individuals with mobility limitations. 
+The system utilizes Light Detection and Ranging (LiDAR) to acquire the user's position, and a nine-axis sensor to monitor rollator’s status. 
+To drive the rollator and assist the user, two hub motors are integrated into the rollator. 
+To achieve synchronized operation and precise control the system continuously monitors the Hall signals from both motors and calculates the speed differential.
+By integrating data from sensors, the system analyze of the user's walking status, and adapt to various conditions.
+To control the motors with data from the sensors, a two-stage hierarchical fuzzy logic controller is designed. 
+The first stage generating initial control signals based on the user's status {relative to the rollator}. 
+The second stage takes the first stage output, combined with the calculated motor speed differential, to fin-tune the initial control signals and achieving more precise motor control. 
+This design ensures the Intelligent Rollator can adjust motor speeds in real-time, maintaining a stable movement, which provides reliable mobility support.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -100,220 +106,48 @@ Intelligent rollator, LiDAR, Fuzzy logic system, Mobility control.
 This document is a model and instructions for \LaTeX.
 Please observe the conference page limits. For more information about how to become an IEEE Conference author or how to write your paper, please visit   IEEE Conference Author Center website: https://conferences.ieeeauthorcenter.ieee.org/.
 
-\subsection{Maintaining the Integrity of the Specifications}
+\section{System Overview}
+LiDAR is used to detect the variation of the positions of both legs in the forward direction of the senior while walking, as well as the rate of variation in the spacing of the gait in order to deduce the walking trend.
+The LiDAR scanner scans frontward, while the angular scanning regions for the left and right legs are set to 0° to 30° and 330° to 360°, respectively. For normal usage of the user and assistive walker, the safe distance is about 80 cm. If the scanned distance exceeds this value, then an abnormal situation is detected, and this result is used to adjust the speed of motor rotation.
+Finally, after obtaining the sensing data, bubble sort is used to arrange the data and eliminate any abnormal points, and then the mean value is calculated. The system calculates a new center point of the leg positions every two seconds and derives a weighted mean value between the newly calculated center point and the mean value. If the value of the center distance is below a specific range, the motor speed will be increased; otherwise, it will be decreased.
+For further analysis of the walking patterns, smoothing functions are applied to the average gait spacing information in order to eliminate noise and short-term variations. Following that, the peak and trough information are obtained from the smoothed data set, and the Least Squares Method is applied for curve fitting to determine the best fit model for the trend. Finally, the probability density function (PDF), that of a Gaussian distribution, is applied for statistical analysis of the gait information, and the resulting distribution will be output for analysis of the walking stability and abnormality.
 
-The IEEEtran class file is used to format your paper and style the text. All margins, 
-column widths, line spaces, and text fonts are prescribed; please do not 
-alter them. You may note peculiarities. For example, the head margin
-measures proportionately more than is customary. This measurement 
-and others are deliberate, using specifications that anticipate your paper 
-as one part of the entire proceedings, and not as an independent document. 
-Please do not revise any of the current designations.
 
-\section{Prepare Your Paper Before Styling}
-Before you begin to format your paper, first write and save the content as a 
-separate text file. Complete all content and organizational editing before 
-formatting. Please note sections \ref{AA} to \ref{FAT} below for more information on 
-proofreading, spelling and grammar.
+\section{Proposed Methodology}
+﻿This section presents the dual in-wheel motor control and synchronization strategy for the intelligent walker. The left and right wheel outputs are adjusted according to the distance between the elderly user and the walker to maintain a safe following distance and stable walking.
+A brushless motor driver is used. The control wiring includes Hall-signal feedback, PWM speed control, brake power-off, three-speed selection, and a reverse signal. Hall signals are fed back to an Arduino Mega2560 for closed-loop control, PWM directly regulates the two motor speeds, and the brake power-off line is used for emergency stopping; the reverse signal can provide downhill resistance but may induce oscillation.
+Even motors of the same model show left-right speed differences due to manufacturing tolerances, so feedback-based synchronization is required. Feedback sources include Hall signals and the absolute heading deviation and angular acceleration from a 9-axis sensor to improve straight-line and turning stability.
+First, hall readings change abruptly during N/S transitions and are used to identify speed pulses. Under the same PWM input, the left and right wheels show different transition counts (e.g., 20 vs. 16), and the waveforms differ across PWM ranges (60–75 and 80–90), indicating persistent speed mismatch.Besides, turning control uses a 9-axis sensor to estimate posture and operator intent, and differential-speed control is applied. Tuning results set the increment/decrement to ±7, with the inner-side speed reduced and the outer-side speed increased during turns. The BNO055 sensor provides absolute orientation, angular velocity, acceleration, and magnetic-field strength as control inputs.
+The controller adopts a fuzzy logic system (FLS) and a hierarchical fuzzy system (HFS). The FLS consists of fuzzification, inference, and defuzzification, while the HFS is composed of multiple FLS units. Using the Nauck index, the complexity is minimized and the rule number is reduced when each layer has two inputs. The HFS is implemented in serial (SHFS) or parallel (PHFS) forms.
+In the dual-wheel fuzzy walking system, the left-wheel controller uses the operator-LiDAR distance and its rate of change to output the left-wheel speed difference. The right-wheel controller incorporates the left-wheel output and the Hall-recorded speed difference within a fixed interval to estimate and adjust the right-wheel speed difference for synchronization. 
+Finally, synchronization is evaluated by the Hall-signal difference: the initial speed gap is larger but converges over time, and the steady-state error stays within approximately ±2.
 
-Keep your text and graphic files separate until after the text has been 
-formatted and styled. Do not number text heads---{\LaTeX} will do that 
-for you.
 
-\subsection{Abbreviations and Acronyms}\label{AA}
-Define abbreviations and acronyms the first time they are used in the text, 
-even after they have been defined in the abstract. Abbreviations such as 
-IEEE, SI, MKS, CGS, ac, dc, and rms do not have to be defined. Do not use 
-abbreviations in the title or heads unless they are unavoidable.
+\section{Experiment and Conclusion}
+In the experimental phase of this study, raw distance data were first pre-processed to mitigate the impact of outliers. 
 
-\subsection{Units}
-\begin{itemize}
-\item Use either SI (MKS) or CGS as primary units. (SI units are encouraged.) English units may be used as secondary units (in parentheses). An exception would be the use of English units as identifiers in trade, such as ``3.5-inch disk drive''.
-\item Avoid combining SI and CGS units, such as current in amperes and magnetic field in oersteds. This often leads to confusion because equations do not balance dimensionally. If you must use mixed units, clearly state the units for each quantity that you use in an equation.
-\item Do not mix complete spellings and abbreviations of units: ``Wb/m\textsuperscript{2}'' or ``webers per square meter'', not ``webers/m\textsuperscript{2}''. Spell out units when they appear in text: ``. . . a few henries'', not ``. . . a few H''.
-\item Use a zero before decimal points: ``0.25'', not ``.25''. Use ``cm\textsuperscript{3}'', not ``cc''.)
-\end{itemize}
+Subsequently, the least squares method was applied to derive an optimal fitting curve. 
+This curve accurately characterizes the spatial variation between the user's lower limbs and the LiDAR sensor, enabling the system to distinguish dynamic features between steady-state walking and gait transitions (e.g., acceleration or deceleration). 
 
-\subsection{Equations}
-Number equations consecutively. To make your 
-equations more compact, you may use the solidus (~/~), the exp function, or 
-appropriate exponents. Italicize Roman symbols for quantities and variables, 
-but not Greek symbols. Use a long dash rather than a hyphen for a minus 
-sign. Punctuate equations with commas or periods when they are part of a 
-sentence, as in:
-\begin{equation}
-a+b=\gamma\label{eq}
-\end{equation}
-
-Be sure that the 
-symbols in your equation have been defined before or immediately following 
-the equation. Use ``\eqref{eq}'', not ``Eq.~\eqref{eq}'' or ``equation \eqref{eq}'', except at 
-the beginning of a sentence: ``Equation \eqref{eq} is . . .''
-
-\subsection{\LaTeX-Specific Advice}
-
-Experimental Data Processing and Feature ExtractionDuring the experimental phase of this study, the collected distance data was first preprocessed to remove outliers. Subsequently, the Least Squares Method was employed to generate an optimal fitting curve. This curve accurately characterizes the distance variation between the user's legs and the LiDAR, enabling the system to precisely distinguish the dynamic features of normal walking versus gait transitions (increasing or decreasing steps). These features serve as inputs for the fuzzy control system, facilitating the precise modulation of the hub motors.Validation of the Hierarchical Fuzzy System (HFS)Finally, the efficacy of the Hierarchical Fuzzy System (HFS) was validated across various road scenarios. Experimental results demonstrate that in straight-line tests, the system stabilizes the wheel speed difference within a minimal interval of $\pm 2$, ensuring high directional stability without manual intervention. The turning tests verified the system's sensitivity to the operator's intent; upon detecting an increased differential in wheel speeds, the controller guides the vehicle through the turn and rapidly restores straight-line control once the maneuver is complete.Performance on InclinesRegarding slope scenarios, the system exhibits excellent dynamic adaptability. In uphill conditions, the system dynamically compensates the PWM output power based on the average center-point distance between the user and the vehicle to provide sufficient thrust. In downhill conditions, an automatic power-cut braking mechanism is utilized to simulate the effects of an Anti-lock Braking System (ABS), providing continuous and stable motor braking to ensure safety during descent.
-
-Please use ``soft'' (e.g., \verb|\eqref{Eq}|) cross references instead
-of ``hard'' references (e.g., \verb|(1)|). That will make it possible
-to combine sections, add equations, or change the order of figures or
-citations without having to go through the file line by line.
-
-Please don't use the \verb|{eqnarray}| equation environment. Use
-\verb|{align}| or \verb|{IEEEeqnarray}| instead. The \verb|{eqnarray}|
-environment leaves unsightly spaces around relation symbols.
-
-Please note that the \verb|{subequations}| environment in {\LaTeX}
-will increment the main equation counter even when there are no
-equation numbers displayed. If you forget that, you might write an
-article in which the equation numbers skip from (17) to (20), causing
-the copy editors to wonder if you've discovered a new method of
-counting.
-
-{\BibTeX} does not work by magic. It doesn't get the bibliographic
-data from thin air but from .bib files. If you use {\BibTeX} to produce a
-bibliography you must send the .bib files. 
-
-{\LaTeX} can't read your mind. If you assign the same label to a
-subsubsection and a table, you might find that Table I has been cross
-referenced as Table IV-B3. 
-
-{\LaTeX} does not have precognitive abilities. If you put a
-\verb|\label| command before the command that updates the counter it's
-supposed to be using, the label will pick up the last counter to be
-cross referenced instead. In particular, a \verb|\label| command
-should not go before the caption of a figure or a table.
-
-Do not use \verb|\nonumber| inside the \verb|{array}| environment. It
-will not stop equation numbers inside \verb|{array}| (there won't be
-any anyway) and it might stop a wanted equation number in the
-surrounding equation.
-
-\subsection{Some Common Mistakes}\label{SCM}
-\begin{itemize}
-\item The word ``data'' is plural, not singular.
-\item The subscript for the permeability of vacuum $\mu_{0}$, and other common scientific constants, is zero with subscript formatting, not a lowercase letter ``o''.
-\item In American English, commas, semicolons, periods, question and exclamation marks are located within quotation marks only when a complete thought or name is cited, such as a title or full quotation. When quotation marks are used, instead of a bold or italic typeface, to highlight a word or phrase, punctuation should appear outside of the quotation marks. A parenthetical phrase or statement at the end of a sentence is punctuated outside of the closing parenthesis (like this). (A parenthetical sentence is punctuated within the parentheses.)
-\item A graph within a graph is an ``inset'', not an ``insert''. The word alternatively is preferred to the word ``alternately'' (unless you really mean something that alternates).
-\item Do not use the word ``essentially'' to mean ``approximately'' or ``effectively''.
-\item In your paper title, if the words ``that uses'' can accurately replace the word ``using'', capitalize the ``u''; if not, keep using lower-cased.
-\item Be aware of the different meanings of the homophones ``affect'' and ``effect'', ``complement'' and ``compliment'', ``discreet'' and ``discrete'', ``principal'' and ``principle''.
-\item Do not confuse ``imply'' and ``infer''.
-\item The prefix ``non'' is not a word; it should be joined to the word it modifies, usually without a hyphen.
-\item There is no period after the ``et'' in the Latin abbreviation ``et al.''.
-\item The abbreviation ``i.e.'' means ``that is'', and the abbreviation ``e.g.'' means ``for example''.
-\end{itemize}
-An excellent style manual for science writers is \cite{b7}.
-
-\subsection{Authors and Affiliations}\label{AAA}
-\textbf{The class file is designed for, but not limited to, six authors.} A 
-minimum of one author is required for all conference articles. Author names 
-should be listed starting from left to right and then moving down to the 
-next line. This is the author sequence that will be used in future citations 
-and by indexing services. Names should not be listed in columns nor group by 
-affiliation. Please keep your affiliations as succinct as possible (for 
-example, do not differentiate among departments of the same organization).
-
-\subsection{Identify the Headings}\label{ITH}
-Headings, or heads, are organizational devices that guide the reader through 
-your paper. There are two types: component heads and text heads.
-
-Component heads identify the different components of your paper and are not 
-topically subordinate to each other. Examples include Acknowledgments and 
-References and, for these, the correct style to use is ``Heading 5''. Use 
-``figure caption'' for your Figure captions, and ``table head'' for your 
-table title. Run-in heads, such as ``Abstract'', will require you to apply a 
-style (in this case, italic) in addition to the style provided by the drop 
-down menu to differentiate the head from the text.
-
-Text heads organize the topics on a relational, hierarchical basis. For 
-example, the paper title is the primary text head because all subsequent 
-material relates and elaborates on this one topic. If there are two or more 
-sub-topics, the next level head (uppercase Roman numerals) should be used 
-and, conversely, if there are not at least two sub-topics, then no subheads 
-should be introduced.
-
-\subsection{Figures and Tables}\label{FAT}
-\paragraph{Positioning Figures and Tables} Place figures and tables at the top and 
-bottom of columns. Avoid placing them in the middle of columns. Large 
-figures and tables may span across both columns. Figure captions should be 
-below the figures; table heads should appear above the tables. Insert 
-figures and tables after they are cited in the text. Use the abbreviation 
-``Fig.~\ref{fig}'', even at the beginning of a sentence.
-
-\begin{table}[htbp]
-\caption{Table Type Styles}
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-\textbf{Table}&\multicolumn{3}{|c|}{\textbf{Table Column Head}} \\
-\cline{2-4} 
-\textbf{Head} & \textbf{\textit{Table column subhead}}& \textbf{\textit{Subhead}}& \textbf{\textit{Subhead}} \\
-\hline
-copy& More table copy$^{\mathrm{a}}$& &  \\
-\hline
-\multicolumn{4}{l}{$^{\mathrm{a}}$Sample of a Table footnote.}
-\end{tabular}
-\label{tab1}
-\end{center}
-\end{table}
-
-\begin{figure}[htbp]
-\centerline{\includegraphics{fig1.png}}
-\caption{Example of a figure caption.}
-\label{fig}
-\end{figure}
-
-Figure Labels: Use 8 point Times New Roman for Figure labels. Use words 
-rather than symbols or abbreviations when writing Figure axis labels to 
-avoid confusing the reader. As an example, write the quantity 
-``Magnetization'', or ``Magnetization, M'', not just ``M''. If including 
-units in the label, present them within parentheses. Do not label axes only 
-with units. In the example, write ``Magnetization (A/m)'' or ``Magnetization 
-\{A[m(1)]\}'', not just ``A/m''. Do not label axes with a ratio of 
-quantities and units. For example, write ``Temperature (K)'', not 
-``Temperature/K''.
-
-\section*{Acknowledgment}
-
-The preferred spelling of the word ``acknowledgment'' in America is without 
-an ``e'' after the ``g''. Avoid the stilted expression ``one of us (R. B. 
-G.) thanks $\ldots$''. Instead, try ``R. B. G. thanks$\ldots$''. Put sponsor 
-acknowledgments in the unnumbered footnote on the first page.
-
-\section*{Conclusion}
-
-\renewcommand{\thefigure}{5.1} 
-\setcounter{figure}{0}
-
-In the experimental phase of this study, raw distance data were first pre-processed to 
-mitigate the impact of outliers. Subsequently, the least squares method was applied to derive 
-an optimal fitting curve. This curve accurately characterizes the spatial variation between 
-the user's lower limbs and the Light Detection and Ranging (LiDAR) sensor, enabling the 
-system to distinguish dynamic features between steady-state walking and gait transitions 
-(e.g., acceleration or deceleration). These features serve as the primary inputs for the 
-fuzzy control system, thereby facilitating precise regulation of the in-wheel motors.
+These features serve as the primary inputs for the fuzzy control system, thereby facilitating precise regulation of the in-wheel motors.
 
 The performance of the proposed Hierarchical Fuzzy System (HFS) was validated across diverse 
 terrain scenarios. Experimental results indicate that in straight-line tests, the system 
 effectively constrains the wheel speed differential within a narrow interval of $\pm 2$ (as 
-illustrated in Fig.~\ref{fig:5.1}), ensuring autonomous directional stability 
-without human intervention. In cornering maneuvers, the controller exhibits high sensitivity 
-to user intent; upon detecting a significant speed differential, it guides the vehicle 
+illustrated in Fig.~\ref{fig:fig5_1}), ensuring autonomous directional stability without human intervention. 
+In cornering maneuvers, the controller exhibits high sensitivity to user intent; 
+upon detecting a significant speed differential, it guides the vehicle 
 through the turn and achieves rapid convergence back to straight-line tracking post-maneuver. 
 
-Furthermore, the system demonstrates robust adaptability in ramp scenarios. For uphill 
-transitions, the system dynamically compensates the Pulse Width Modulation (PWM) output based 
-on the relative distance between the user and the vehicle's center of mass to provide 
-sufficient propulsion. Conversely, during downhill descents, an automatic power-off braking 
-mechanism is implemented to simulate the functionality of an Anti-lock Braking System (ABS), 
-providing sustained braking torque and ensuring operational safety.
+Furthermore, the system demonstrates robust adaptability in ramp scenarios. 
+For uphill transitions, the system dynamically compensates the Pulse Width Modulation (PWM) output based on the relative distance between the user and the vehicle's center of mass to provide sufficient propulsion. 
+Conversely, during downhill descents, an automatic power-off braking mechanism is implemented to simulate the functionality of an Anti-lock Braking System (ABS), providing sustained braking torque and ensuring operational safety.
 
-\begin{figure}[!t]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{fig5_1.png}
     \caption{Hall signal difference during straight-line walking and turning maneuvers. The green boundary illustrates the system's ability to maintain the speed differential within a stable range of $\pm 2$ during the correction process.}
-    \label{fig:5.1}
+    \label{fig:fig5_1}
 \end{figure}
 
 \begin{thebibliography}{00}
@@ -323,15 +157,6 @@ providing sustained braking torque and ensuring operational safety.
 \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
 \bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
 \bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
-\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
-\bibitem{b8} D. P. Kingma and M. Welling, ``Auto-encoding variational Bayes,'' 2013, arXiv:1312.6114. [Online]. Available: https://arxiv.org/abs/1312.6114
-\bibitem{b9} S. Liu, ``Wi-Fi Energy Detection Testbed (12MTC),'' 2023, gitHub repository. [Online]. Available: https://github.com/liustone99/Wi-Fi-Energy-Detection-Testbed-12MTC
-\bibitem{b10} ``Treatment episode data set: discharges (TEDS-D): concatenated, 2006 to 2009.'' U.S. Department of Health and Human Services, Substance Abuse and Mental Health Services Administration, Office of Applied Studies, August, 2013, DOI:10.3886/ICPSR30122.v2
-\bibitem{b11} K. Eves and J. Valasek, ``Adaptive control for singularly perturbed systems examples,'' Code Ocean, Aug. 2023. [Online]. Available: https://codeocean.com/capsule/4989235/tree
 \end{thebibliography}
-
-\vspace{12pt}
-\color{red}
-IEEE conference templates contain guidance text for composing and formatting conference papers. Please ensure that all template text is removed from your conference paper prior to submission to the conference. Failure to remove the template text from your paper may result in your paper not being published.
 
 \end{document}
