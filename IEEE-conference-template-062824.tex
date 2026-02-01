@@ -126,7 +126,7 @@ Then the mean value from both regions are calculated, which is the center point 
 The position calculates and update cycle is 2 Hz.
 
 By grouping all the data from LiDAR, we can have the time domain data about current user walking behaviors.
-Through smoothing function, peak and trough finding algotherm, and statistical analysis, we extract the more useful data from the initial time domain data, which will be use in fuzzy control.
+Through smoothing function, peak and trough finding algotherm, and statistical analysis, we extract the more useful data from the initial time domain data, which will be use in fuzzy control \cite{b2}.
 
 \subsection {Motor Control}
 ﻿In this study, we use dual in-wheel motors to power rollator, and use synchronization strategy to control it. 
@@ -140,9 +140,9 @@ An important behavior we notice in research is that when applying rever signal f
 So we didn't use it for breaking, mainly to keep the users safe.
 
 \subsection {Fuzzy Control System}
-The controller adopts a fuzzy logic system (FLS) and a hierarchical fuzzy system (HFS). The FLS consists of fuzzification, inference, and defuzzification, while the HFS is composed of multiple FLS units. 
+The controller adopts a fuzzy logic system (FLS) and a hierarchical fuzzy system (HFS) \cite{b3}. The FLS consists of fuzzification, inference, and defuzzification, while the HFS is composed of multiple FLS units. 
 
-Using the Nauck index, the complexity is minimized and the rule number is reduced when each layer has two inputs. The HFS is implemented in serial (SHFS) or parallel (PHFS) forms.
+Using the Nauck index \cite{b4}, the complexity is minimized and the rule number is reduced when each layer has two inputs. The HFS is implemented in serial (SHFS) or parallel (PHFS) forms.
 
 In the dual-wheel fuzzy walking system, the left-wheel controller uses the operator-LiDAR distance and its rate of change to output the left-wheel speed difference. Which is shown in Fig.\ref{fig:fig_3}
 
@@ -178,7 +178,11 @@ We hope it can assist elders and weaks, so they can exercise more, and have bett
 
 \begin{thebibliography}{00}
 \bibitem{b1} National Development Council [Online]. Available: https://pop-proj.ndc.gov.tw/main\_en/
+\bibitem{b2} A. Yeaser, J. Tung, J. Huissoon, and E. Hashemi, ``Learning-Aided User Intent Estimation for Smart Rollators,'' \textit{2020 42nd Annual International Conference of the IEEE Engineering in Medicine \& Biology Society (EMBC)}, Montreal, QC, Canada, 2020, pp. 3178--3183, doi: 10.1109/EMBC44109.2020.9175610.
 
+\bibitem{b3} T. Zhao, H. Cao, and S. Dian, ``A Self-Organized Method for a Hierarchical Fuzzy Logic System Based on a Fuzzy Autoencoder,'' \textit{IEEE Transactions on Fuzzy Systems}, vol. 30, no. 12, pp. 5104--5115, Dec. 2022, doi: 10.1109/TFUZZ.2022.3165690.
+
+\bibitem{b4} D. D. Nauck, ``Measuring Interpretability in Rule-Based Classification Systems,'' \textit{The 12th IEEE International Conference on Fuzzy Systems, 2003. FUZZ '03.}, St. Louis, MO, USA, 2003, pp. 196--201 vol.1, doi: 10.1109/FUZZ.2003.1209361.
 
 \end{thebibliography}
 
