@@ -9,6 +9,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{multirow}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -17,25 +18,7 @@
 \title{An Intelligent Rollator by Integrating Fuzzy Control and Multi-Sensor System}
 
 \author{
-	\IEEEauthorblockN{Chen, Hsiang-Chieh}
-	\IEEEauthorblockA{
-		\textit{Department of Mechanical Engineering} \\
-		\textit{National Central University}\\
-		Taoyuan, Taiwan \\
-		hcchen@cc.ncu.edu.tw
-	}
-	\and
-
-	\IEEEauthorblockN{2}
-	\IEEEauthorblockA{
-		\textit{Department of Mechanical Engineering} \\
-		\textit{National Central University}\\
-		Taoyuan, Taiwan \\
-		@cc.ncu.edu.tw
-	}
-	\and
-
-	\IEEEauthorblockN{Lin, Yi-Hsuan}
+	\IEEEauthorblockN{Yi-Hsuan, Lin}
 	\IEEEauthorblockA{
 		\textit{Department of Mechanical Engineering} \\
 		\textit{National Central University}\\
@@ -44,7 +27,17 @@
 	}
 	\and
 
-	\IEEEauthorblockN{Lu, Yu-Ta}
+	\IEEEauthorblockN{Peng-Wen, Chen}
+	\IEEEauthorblockA{
+		\textit{Department of Mechanical Engineering} \\
+		\textit{National Central University}\\
+		Taoyuan, Taiwan \\
+	}
+	\and
+
+
+
+	\IEEEauthorblockN{Yu-Ta, Lu}
 	\IEEEauthorblockA{
 		\textit{Department of Mechanical Engineering} \\
 		\textit{National Central University}\\
@@ -53,7 +46,7 @@
 	}
 	\and
 	
-	\IEEEauthorblockN{Lin, Yi-Jie}
+	\IEEEauthorblockN{Yi-Jie, Lin}
 	\IEEEauthorblockA{
 		\textit{Department of Mechanical Engineering} \\
 		\textit{National Central University}\\
@@ -62,7 +55,7 @@
 	}
 	\and
 	
-	\IEEEauthorblockN{Chen, Ting-You}
+	\IEEEauthorblockN{Ting-You, Chen}
 	\IEEEauthorblockA{
 		\textit{Department of Mechanical Engineering} \\
 		\textit{National Central University}\\
@@ -71,14 +64,13 @@
 	}
 	\and
 	
-	\IEEEauthorblockN{7}
+	\IEEEauthorblockN{Hsiang-Chieh, Chen}
 	\IEEEauthorblockA{
 		\textit{Department of Mechanical Engineering} \\
 		\textit{National Central University}\\
 		Taoyuan, Taiwan \\
-		@cc.ncu.edu.tw
+		hcchen@cc.ncu.edu.tw
 	}
-	\and
 }
 
 \maketitle
@@ -106,7 +98,7 @@ In this research, we design the ``Intelligent Rollator'', which can give solid a
 
 \begin{figure}
     \centering
-    \includegraphics[width = 5 cm]{fig_2.jpg}
+    \includegraphics[width = 5 cm]{fig_1.jpg}
     \caption{The side view of intelligent rollator}
     \label{fig:fig_1}
 \end{figure}
@@ -153,20 +145,39 @@ In the dual-wheel fuzzy walking system, the left-wheel controller uses the opera
     \label{fig:fig_3}
 \end{figure}
 
-The right-wheel controller incorporates the left-wheel output and the Hall-recorded speed difference within a fixed interval to estimate and adjust the right-wheel speed difference for synchronization.
+The right-wheel controller incorporates the left-wheel output and the Hall-recorded speed difference within a fixed interval ("Hall Signal Difference" in table \ref{tab:fuzzy_rules}) to estimate and adjust the right-wheel speed difference compare to the left-wheel for synchronization. The resulting speed differences are converted into PWM adjustments for the motor drivers, with reverse signals omitted to ensure user safety.
+It's fuzzy control logic can be summrize by table \ref{tab:fuzzy_rules}.
 
-\section{Experiment and Conclusion}
+In table \ref{tab:fuzzy_rules}, the abbreviation meaning is as following.
+NB, negative big value ;
+NS, negative small value ;
+Z, value close to zero ;
+PS, positive small value ;
+PB, positive big value ;
+
+\begin{table}[h]
+\centering
+
+\caption{Fuzzy logic for right wheel}
+\label{tab:fuzzy_rules}
+
+\begin{tabular}{cc|c|c|c|c|c|}
+\cline{3-7} % Draws a horizontal line starting from column 3 to 7
+ & & \multicolumn{5}{c|}{Hall Signal Difference} \\ \cline{3-7} 
+ & & NB & NS & Z & PS & PB \\ \hline
+\multicolumn{1}{|c|}{\multirow{5}{*}{\shortstack{Left\\Control\\Value}}} & NB & 0 & -5 & -10 & -15 & -20 \\ \cline{2-7} 
+\multicolumn{1}{|c|}{} & NS & +5 & 0 & -5 & -10 & -15 \\ \cline{2-7} 
+\multicolumn{1}{|c|}{} & Z & +10 & +5 & 0 & -5 & -10 \\ \cline{2-7} 
+\multicolumn{1}{|c|}{} & PS & +15 & +10 & +5 & 0 & -5 \\ \cline{2-7} 
+\multicolumn{1}{|c|}{} & PB & +20 & +15 & +10 & +5 & 0 \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Experiment}
 The performance of the proposed Hierarchical Fuzzy System (HFS) was validated across diverse scenarios. 
 Experimental results indicate that in straight-line tests, the system effectively constrains the wheel speed differential within a narrow interval of $\pm 2$ (as illustrated in Fig.~\ref{fig:fig5_1}), ensuring autonomous directional stability without human intervention.
 
 In turning test, the controller is sensitive to user intent. Once it detect a significant speed differential, it guides the vehicle through the turn and switch back to straight-line tracking once the corner is passed. 
-
-For uphill, the rollator did provide sufficient propulsion through PWN to assist the user, which assit them pass a more challenging terrian.
-As for downhill, power-off braking providing sustained braking torque and ensuring operational safety.
-
-In conculsion, this design can assiste the user in many daily use cases. 
-We hope it can assist elders and weaks, so they can exercise more, and have better life quality.
-
 
 \begin{figure}[h]
     \centering
@@ -175,6 +186,15 @@ We hope it can assist elders and weaks, so they can exercise more, and have bett
     The green boundary illustrates the system's ability to maintain the speed differential within a stable range of $\pm 2$ during the correction process.}
     \label{fig:fig5_1}
 \end{figure}
+
+
+For uphill, the rollator did provide sufficient propulsion through PWM to assist the user, which assit them pass a more challenging terrian.
+As for downhill, power-off braking providing sustained braking torque and ensuring operational safety.
+
+\section{Conclusion and Future Work}
+In conclusion, this design assists users across various outdoor use cases. The primary goal is to support the elderly individuals, encouraging physical activity and ultimately enhancing their quality of life.
+
+Future research will focus on further extend this design to support specialized populations, such as patients with congenital skeletal dysplasia or those suffering from muscular atrophy.
 
 \begin{thebibliography}{00}
 \bibitem{b1} National Development Council [Online]. Available: https://pop-proj.ndc.gov.tw/main\_en/
