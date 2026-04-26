@@ -145,7 +145,7 @@ In the dual-wheel fuzzy walking system, the left-wheel controller uses the opera
     \label{fig:fig_3}
 \end{figure}
 
-The right-wheel controller incorporates the left-wheel output and the Hall-recorded speed difference within a fixed interval ("Hall Signal Difference" in table \ref{tab:fuzzy_rules}) to estimate and adjust the right-wheel speed difference compare to the left-wheel for synchronization. 
+The right-wheel controller incorporates the left-wheel output and the Hall-recorded speed difference within a fixed interval ("Hall Signal Difference" in table \ref{tab:fuzzy_rules}) to estimate and adjust the right-wheel speed difference compare to the left-wheel for synchronization. The resulting speed differences are converted into PWM adjustments for the motor drivers, with reverse signals omitted to ensure user safety.
 It's fuzzy control logic can be summrize by table \ref{tab:fuzzy_rules}.
 
 In table \ref{tab:fuzzy_rules}, the abbreviation meaning is as following.
@@ -188,7 +188,7 @@ In turning test, the controller is sensitive to user intent. Once it detect a si
 \end{figure}
 
 
-For uphill, the rollator did provide sufficient propulsion through PWN to assist the user, which assit them pass a more challenging terrian.
+For uphill, the rollator did provide sufficient propulsion through PWM to assist the user, which assit them pass a more challenging terrian.
 As for downhill, power-off braking providing sustained braking torque and ensuring operational safety.
 
 \section{Conclusion and Future Work}
